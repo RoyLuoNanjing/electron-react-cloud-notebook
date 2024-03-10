@@ -8,7 +8,12 @@ function Hello() {
     <div className="Hello container-fluid">
       <div className="row">
         <div className="col-4  left-panel">
-          <FileSearch title={'My Cloud Files'} onFileSearch={() => {}} />
+          <FileSearch
+            title={'My Cloud Files'}
+            onFileSearch={(value) => {
+              console.log(value);
+            }}
+          />
         </div>
         <div className="col-8 bg-primary right-panel">
           <h1>this is the right</h1>
