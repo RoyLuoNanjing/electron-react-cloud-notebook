@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 interface IProps {
   title: string;
   onFileSearch: (value: string) => void;
@@ -44,10 +45,10 @@ export const FileSearch = (props: IProps) => {
           <span>{title}</span>
           <button
             type="button"
-            className="btn btn-primary"
+            className="icon-button"
             onClick={() => setInputActive(true)}
           >
-            Search
+            <FontAwesomeIcon size={'2x'} title="Search" icon={faSearch} />
           </button>
         </div>
       )}
@@ -59,12 +60,8 @@ export const FileSearch = (props: IProps) => {
             onChange={(e) => setValue(e.target.value)}
             ref={node}
           />
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={closeSearch}
-          >
-            Close
+          <button type="button" className="icon-button" onClick={closeSearch}>
+            <FontAwesomeIcon size={'2x'} title="Close" icon={faTimes} />
           </button>
         </div>
       )}
