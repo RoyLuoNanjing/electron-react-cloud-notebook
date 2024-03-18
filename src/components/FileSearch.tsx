@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
+import useKeyPress from '../hooks/useKeyPress';
 interface IProps {
   title: string;
   onFileSearch: (value: string) => void;
@@ -11,24 +12,21 @@ export const FileSearch = (props: IProps) => {
   const [inputActive, setInputActive] = useState<boolean>(false);
   const [value, setValue] = useState<string>('');
 
-  const closeSearch = (e: any) => {
-    e.preventDefault();
+  const enterPressed = useKeyPress('Enter');
+  const escPressed = useKeyPress('Escape');
+
+  const closeSearch = () => {
     setInputActive(false);
     setValue('');
   };
   useEffect(() => {
-    const handleInputEvent = (event: KeyboardEvent) => {
-      const { key } = event;
-      if (key === 'Enter' && inputActive) {
-        onFileSearch(value);
-      } else if (key === 'Escape' && inputActive) {
-        closeSearch(event);
-      }
-    };
-    document.addEventListener('keyup', handleInputEvent);
-    return () => {
-      document.removeEventListener('keyup', handleInputEvent);
-    };
+    if (enterPressed && inputActive) {
+      onFileSearch(value);
+    }
+
+    if (escPressed && inputActive) {
+      closeSearch();
+    }
   });
 
   let node = useRef<HTMLInputElement>(null);

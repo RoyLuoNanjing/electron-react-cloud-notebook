@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons';
+import useKeyPress from '../hooks/useKeyPress';
 
 interface IFile {
   id: string;
@@ -20,6 +21,9 @@ export const FileList = (props: IProps) => {
 
   const [value, setValue] = useState<string>('');
 
+  const enterPressed = useKeyPress('Enter');
+  const escPressed = useKeyPress('Escape');
+
   //auto focus when selecting a tab to edit
   let node = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -27,28 +31,22 @@ export const FileList = (props: IProps) => {
       node.current?.focus();
     }
   }, [editStatus]);
-  const closeSearch = (e: any) => {
-    e.preventDefault();
+  const closeSearch = () => {
     setEditStatus(null);
     setValue('');
   };
 
   useEffect(() => {
-    const handleInputEvent = (event: KeyboardEvent) => {
-      const { key } = event;
-      if (key === 'Enter' && editStatus != null) {
-        const editItem = files.find((file) => file.id === editStatus);
-        onSaveEdit(editItem!.id, value);
-        setEditStatus(null);
-        setValue('');
-      } else if (key === 'Escape' && editStatus != null) {
-        closeSearch(event);
-      }
-    };
-    document.addEventListener('keyup', handleInputEvent);
-    return () => {
-      document.removeEventListener('keyup', handleInputEvent);
-    };
+    if (enterPressed && editStatus != null) {
+      const editItem = files.find((file) => file.id === editStatus);
+      onSaveEdit(editItem!.id, value);
+      setEditStatus(null);
+      setValue('');
+    }
+
+    if (escPressed && editStatus != null) {
+      closeSearch();
+    }
   });
   return (
     <ul className="list-group list-group-flush file-list">
