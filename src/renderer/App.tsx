@@ -16,7 +16,18 @@ function Hello() {
               console.log(value);
             }}
           />
-          <FileList files={defaultFiles} />
+          <FileList
+            files={defaultFiles}
+            onFileClick={(id) => {
+              console.log(id);
+            }}
+            onFileDelete={(id) => {
+              console.log(id);
+            }}
+            onSaveEdit={(id, newValue) => {
+              console.log(newValue);
+            }}
+          />
         </div>
         <div className="col-8 bg-primary right-panel">
           <h1>this is the right</h1>
