@@ -20,9 +20,26 @@ export const FileList = (props: IProps) => {
       {files.map((file) => (
         <li
           key={file.id}
-          className="list-group-item bg-light d-flex align-items-center file-item"
+          className="list-group-item bg-light d-flex row align-items-center file-item"
         >
-          <span>{file.title}</span>
+          <span className="col-2">
+            <FontAwesomeIcon size="lg" icon={faMarkdown} />
+          </span>
+          <span className="col-8">{file.title}</span>
+          <button
+            type="button"
+            className="icon-button col-1"
+            onClick={() => {}}
+          >
+            <FontAwesomeIcon size={'1x'} title="Edit" icon={faEdit} />
+          </button>
+          <button
+            type="button"
+            className="icon-button col-1"
+            onClick={() => {}}
+          >
+            <FontAwesomeIcon size={'1x'} title="Delete" icon={faTrash} />
+          </button>
         </li>
       ))}
     </ul>
