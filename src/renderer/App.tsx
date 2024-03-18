@@ -2,6 +2,8 @@ import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { FileSearch } from '../components/FileSearch';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FileList } from '../components/FileList';
+import defaultFiles from '../utils/defaultFiles';
 
 function Hello() {
   return (
@@ -14,6 +16,7 @@ function Hello() {
               console.log(value);
             }}
           />
+          <FileList files={defaultFiles} />
         </div>
         <div className="col-8 bg-primary right-panel">
           <h1>this is the right</h1>
