@@ -6,12 +6,13 @@ import { FileList } from '../components/FileList';
 import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons';
 import defaultFiles from '../utils/defaultFiles';
 import { BottomBtn } from '../components/BottomBtn';
+import { TabList } from '../components/TabList';
 
 function Hello() {
   return (
     <div className="Hello container-fluid px-0">
       <div className="row g-0">
-        <div className="col-4  left-panel">
+        <div className="col-3  left-panel">
           <FileSearch
             title={'My Cloud Files'}
             onFileSearch={(value) => {
@@ -43,8 +44,8 @@ function Hello() {
             </div>
           </div>
         </div>
-        <div className="col-8 bg-primary right-panel">
-          <h1>this is the right</h1>
+        <div className="col-9  right-panel">
+          <TabList files={defaultFiles} onTabClick={(id) => console.log(id)} />
         </div>
       </div>
     </div>

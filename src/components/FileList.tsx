@@ -4,7 +4,7 @@ import { faEdit, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons';
 import useKeyPress from '../hooks/useKeyPress';
 
-interface IFile {
+export interface IFile {
   id: string;
   title: string;
 }
