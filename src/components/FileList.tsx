@@ -53,7 +53,7 @@ export const FileList = (props: IProps) => {
       {files.map((file) => (
         <li
           key={file.id}
-          className="list-group-item bg-light d-flex row align-items-center file-item"
+          className="list-group-item bg-light d-flex  align-items-center file-item"
         >
           {file.id != editStatus && (
             <>
