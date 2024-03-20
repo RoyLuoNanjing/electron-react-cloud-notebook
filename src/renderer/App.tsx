@@ -45,7 +45,11 @@ function Hello() {
           </div>
         </div>
         <div className="col-9  right-panel">
-          <TabList files={defaultFiles} onTabClick={(id) => console.log(id)} />
+          <TabList
+            files={defaultFiles}
+            onTabClick={(id) => console.log(id)}
+            activeId="1"
+          />
         </div>
       </div>
     </div>
