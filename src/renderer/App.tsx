@@ -49,6 +49,8 @@ function Hello() {
             files={defaultFiles}
             onTabClick={(id) => console.log(id)}
             activeId="1"
+            onCloseTab={(id) => console.log(id)}
+            unsavedIds={['1', '2']}
           />
         </div>
       </div>
