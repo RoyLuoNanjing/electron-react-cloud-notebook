@@ -18,6 +18,7 @@ export const FileSearch = (props: IProps) => {
   const closeSearch = () => {
     setInputActive(false);
     setValue('');
+    onFileSearch('');
   };
   useEffect(() => {
     if (enterPressed && inputActive) {
