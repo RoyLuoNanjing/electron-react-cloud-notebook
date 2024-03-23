@@ -15,6 +15,7 @@ export const BottomBtn = (props: IProps) => {
       type="button"
       style={{ width: '100%', borderRadius: 0 }}
       className={`btn btn-block  ${colorClass}`}
+      onClick={onBtnClick}
     >
       <FontAwesomeIcon size={'1x'} icon={icon} style={{ marginRight: '4px' }} />
       {text}

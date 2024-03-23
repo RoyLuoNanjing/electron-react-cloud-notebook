@@ -7,6 +7,9 @@ import useKeyPress from '../hooks/useKeyPress';
 export interface IFile {
   id: string;
   title: string;
+  body: string;
+  createdAt: number;
+  isNew?: boolean;
 }
 interface IProps {
   files: IFile[];
@@ -31,23 +34,36 @@ export const FileList = (props: IProps) => {
       node.current?.focus();
     }
   }, [editStatus]);
-  const closeSearch = () => {
+  const closeSearch = (editItem: IFile) => {
     setEditStatus(null);
     setValue('');
+    //if we are editing a newly created file,we should delete this file when pressing esc
+    if (editItem.isNew) {
+      onFileDelete(editItem.id);
+    }
   };
 
   useEffect(() => {
-    if (enterPressed && editStatus != null) {
-      const editItem = files.find((file) => file.id === editStatus);
+    const editItem = files.find((file) => file.id === editStatus);
+    if (enterPressed && editStatus != null && value.trim() != '') {
       onSaveEdit(editItem!.id, value);
       setEditStatus(null);
       setValue('');
     }
 
     if (escPressed && editStatus != null) {
-      closeSearch();
+      closeSearch(editItem!);
     }
   });
+
+  useEffect(() => {
+    const newFile = files.find((file) => file.isNew);
+    if (newFile) {
+      setEditStatus(newFile.id);
+      setValue(newFile.title);
+    }
+  }, [files]);
+
   return (
     <ul className="list-group list-group-flush file-list">
       {files.map((file) => (
@@ -55,7 +71,7 @@ export const FileList = (props: IProps) => {
           key={file.id}
           className="list-group-item bg-light d-flex  align-items-center file-item"
         >
-          {file.id != editStatus && (
+          {file.id != editStatus && !file.isNew && (
             <>
               <span className="col-2">
                 <FontAwesomeIcon size="lg" icon={faMarkdown} />
@@ -90,13 +106,14 @@ export const FileList = (props: IProps) => {
             </>
           )}
 
-          {file.id === editStatus && (
+          {(file.id === editStatus || file.isNew) && (
             <>
               <div className="col-10">
                 <input
                   type="text"
                   ref={node}
                   className="form-control"
+                  placeholder="Please input file name"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
                 />
@@ -105,7 +122,7 @@ export const FileList = (props: IProps) => {
                 <button
                   type="button"
                   className="btn btn-default"
-                  onClick={closeSearch}
+                  onClick={() => closeSearch(file)}
                 >
                   <FontAwesomeIcon size="1x" title="Close" icon={faTimes} />
                 </button>
