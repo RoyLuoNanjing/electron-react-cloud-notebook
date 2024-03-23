@@ -46,7 +46,7 @@ export const FileSearch = (props: IProps) => {
             className="icon-button"
             onClick={() => setInputActive(true)}
           >
-            <FontAwesomeIcon size={'2x'} title="Search" icon={faSearch} />
+            <FontAwesomeIcon size={'1x'} title="Search" icon={faSearch} />
           </button>
         </div>
       )}
@@ -59,7 +59,7 @@ export const FileSearch = (props: IProps) => {
             ref={node}
           />
           <button type="button" className="icon-button" onClick={closeSearch}>
-            <FontAwesomeIcon size={'2x'} title="Close" icon={faTimes} />
+            <FontAwesomeIcon size={'1x'} title="Close" icon={faTimes} />
           </button>
         </div>
       )}
