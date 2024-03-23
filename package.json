@@ -100,6 +100,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@types/uuid": "^9.0.8",
     "bootstrap": "^5.3.3",
     "classnames": "^2.5.1",
     "easymde": "^2.18.0",
@@ -110,7 +111,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
-    "react-simplemde-editor": "^5.2.0"
+    "react-simplemde-editor": "^5.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@electron/notarize": "^2.1.0",
