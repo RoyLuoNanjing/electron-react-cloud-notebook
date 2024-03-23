@@ -4,6 +4,8 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FileList } from '../components/FileList';
 import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons';
+import SimpleMde from 'react-simplemde-editor';
+import 'easymde/dist/easymde.min.css';
 import defaultFiles from '../utils/defaultFiles';
 import { BottomBtn } from '../components/BottomBtn';
 import { TabList } from '../components/TabList';
@@ -51,6 +53,11 @@ function Hello() {
             activeId="1"
             onCloseTab={(id) => console.log(id)}
             unsavedIds={['1', '2']}
+          />
+          <SimpleMde
+            value={defaultFiles[1].body}
+            onChange={(value) => console.log(value)}
+            options={{ minHeight: '515px' }}
           />
         </div>
       </div>
