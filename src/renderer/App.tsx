@@ -4,6 +4,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FileList, IFile } from '../components/FileList';
 import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons';
+
 import SimpleMde from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import defaultFiles from '../utils/defaultFiles';
@@ -14,13 +15,54 @@ import { useState } from 'react';
 function Hello() {
   const [files, setFiles] = useState(defaultFiles);
   const [activeFileID, setActiveFileID] = useState('');
-  const [openedFileIDs, setOpenFileIDs] = useState([]);
-  const [unsavedFileIDs, setUnsavedFileIDs] = useState([]);
+  const [openedFileIDs, setOpenFileIDs] = useState<string[]>([]);
+  const [unsavedFileIDs, setUnsavedFileIDs] = useState<string[]>([]);
 
   const openedFiles = openedFileIDs
     .map((openID) => files.find((file) => file.id === openID))
     .filter((file) => file !== undefined) as IFile[];
 
+  const fileClick = (fileID: string) => {
+    //set current active file
+    setActiveFileID(fileID);
+    //if openedFiles don't have the current ID
+    //then add new fileID to openedFiles
+    if (!openedFileIDs.includes(fileID)) {
+      setOpenFileIDs([...openedFileIDs, fileID]);
+    }
+  };
+
+  const tabClick = (fileID: string) => {
+    //set current active file
+    setActiveFileID(fileID);
+  };
+
+  const tabClose = (fileID: string) => {
+    //remove this current id from openedFilesIDs
+    const tabsWithout = openedFileIDs.filter((id) => id != fileID);
+    setOpenFileIDs(tabsWithout);
+    //set the active to the first opened tab if still tabs left
+    if (tabsWithout.length > 0) {
+      setActiveFileID(tabsWithout[0]);
+    } else {
+      setActiveFileID('');
+    }
+  };
+  const fileChange = (id: string, value: string) => {
+    //loop through file array to update to new value
+    const newFiles = files.map((file) => {
+      if (file.id === id) {
+        file.body = value;
+      }
+      return file;
+    });
+    setFiles(newFiles);
+
+    //update the unsavedIDs
+    if (!unsavedFileIDs.includes(id)) {
+      setUnsavedFileIDs([...unsavedFileIDs, id]);
+    }
+  };
   const activeFile = files.find((file) => file.id === activeFileID);
 
   return (
@@ -35,9 +77,7 @@ function Hello() {
           />
           <FileList
             files={files}
-            onFileClick={(id) => {
-              console.log(id);
-            }}
+            onFileClick={fileClick}
             onFileDelete={(id) => {
               console.log(id);
             }}
@@ -68,15 +108,16 @@ function Hello() {
             <>
               <TabList
                 files={openedFiles}
-                onTabClick={(id) => console.log(id)}
+                onTabClick={tabClick}
                 activeId={activeFileID}
-                onCloseTab={(id) => console.log(id)}
+                onCloseTab={tabClose}
                 unsavedIds={unsavedFileIDs}
               />
               <SimpleMde
+                key={activeFile && activeFile.id}
                 value={activeFile && activeFile.body}
-                onChange={(value) => console.log(value)}
-                options={{ minHeight: '515px' }}
+                onChange={(value) => fileChange(activeFile.id, value)}
+                options={{ minHeight: '515px', autofocus: true }}
               />
             </>
           )}
