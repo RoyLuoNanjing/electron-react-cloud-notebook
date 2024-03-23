@@ -17,6 +17,7 @@ function Hello() {
   const [activeFileID, setActiveFileID] = useState('');
   const [openedFileIDs, setOpenFileIDs] = useState<string[]>([]);
   const [unsavedFileIDs, setUnsavedFileIDs] = useState<string[]>([]);
+  const [searchedFiles, setSearchedFiles] = useState<IFile[]>([]);
 
   const openedFiles = openedFileIDs
     .map((openID) => files.find((file) => file.id === openID))
@@ -63,27 +64,44 @@ function Hello() {
       setUnsavedFileIDs([...unsavedFileIDs, id]);
     }
   };
+
+  const deleteFile = (id: string) => {
+    //  filter out the current file id
+    const newFiles = files.filter((file) => file.id != id);
+    setFiles(newFiles);
+    //close the tab if opened
+    tabClose(id);
+  };
+
+  const updateFileName = (id: string, title: string) => {
+    //loop through files, and update the title
+    const newFiles = files.map((file) => {
+      if (file.id === id) {
+        file.title = title;
+      }
+      return file;
+    });
+    setFiles(newFiles);
+  };
+
+  const fileSearch = (keyword: string) => {
+    //filter out the new files based on the keyword
+    const newFiles = files.filter((file) => file.title.includes(keyword));
+    setSearchedFiles(newFiles);
+  };
+
   const activeFile = files.find((file) => file.id === activeFileID);
 
   return (
     <div className="Hello container-fluid px-0">
       <div className="row g-0">
         <div className="col-3  left-panel">
-          <FileSearch
-            title={'My Cloud Files'}
-            onFileSearch={(value) => {
-              console.log(value);
-            }}
-          />
+          <FileSearch title={'My Cloud Files'} onFileSearch={fileSearch} />
           <FileList
-            files={files}
+            files={searchedFiles.length > 0 ? searchedFiles : files}
             onFileClick={fileClick}
-            onFileDelete={(id) => {
-              console.log(id);
-            }}
-            onSaveEdit={(id, newValue) => {
-              console.log(newValue);
-            }}
+            onFileDelete={deleteFile}
+            onSaveEdit={updateFileName}
           />
           <div className="row g-0 button-group">
             <div className="col">
