@@ -4,7 +4,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FileList, IFile } from '../components/FileList';
 import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons';
-
+import { v4 as uuidv4 } from 'uuid';
 import SimpleMde from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import defaultFiles from '../utils/defaultFiles';
@@ -78,6 +78,7 @@ function Hello() {
     const newFiles = files.map((file) => {
       if (file.id === id) {
         file.title = title;
+        file.isNew = false;
       }
       return file;
     });
@@ -88,6 +89,21 @@ function Hello() {
     //filter out the new files based on the keyword
     const newFiles = files.filter((file) => file.title.includes(keyword));
     setSearchedFiles(newFiles);
+  };
+
+  const createNewFile = () => {
+    const newID = uuidv4();
+    const newFiles = [
+      ...files,
+      {
+        id: newID,
+        title: '',
+        body: '## Please type in Markdown',
+        createdAt: new Date().getTime(),
+        isNew: true,
+      },
+    ];
+    setFiles(newFiles);
   };
 
   const activeFile = files.find((file) => file.id === activeFileID);
@@ -105,7 +121,12 @@ function Hello() {
           />
           <div className="row g-0 button-group">
             <div className="col">
-              <BottomBtn text="Create" colorClass="btn-primary" icon={faPlus} />
+              <BottomBtn
+                text="Create"
+                colorClass="btn-primary"
+                icon={faPlus}
+                onBtnClick={createNewFile}
+              />
             </div>
             <div className="col">
               <BottomBtn
