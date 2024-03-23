@@ -16,7 +16,7 @@ export const BottomBtn = (props: IProps) => {
       style={{ width: '100%', borderRadius: 0 }}
       className={`btn btn-block  ${colorClass}`}
     >
-      <FontAwesomeIcon className="mr-2" size={'1x'} icon={icon} />
+      <FontAwesomeIcon size={'1x'} icon={icon} style={{ marginRight: '4px' }} />
       {text}
     </button>
   );
