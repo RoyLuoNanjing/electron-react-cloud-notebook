@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FileList, IFile } from '../components/FileList';
 import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
+import { flattenArr, objToArr } from '../utils/helper';
 import SimpleMde from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import defaultFiles from '../utils/defaultFiles';
@@ -13,15 +14,13 @@ import { TabList } from '../components/TabList';
 import { useState } from 'react';
 
 function Hello() {
-  const [files, setFiles] = useState(defaultFiles);
+  const [files, setFiles] = useState(flattenArr(defaultFiles));
+  console.log(files);
   const [activeFileID, setActiveFileID] = useState('');
   const [openedFileIDs, setOpenFileIDs] = useState<string[]>([]);
   const [unsavedFileIDs, setUnsavedFileIDs] = useState<string[]>([]);
   const [searchedFiles, setSearchedFiles] = useState<IFile[]>([]);
-
-  const openedFiles = openedFileIDs
-    .map((openID) => files.find((file) => file.id === openID))
-    .filter((file) => file !== undefined) as IFile[];
+  const filesArr = objToArr(files);
 
   const fileClick = (fileID: string) => {
     //set current active file
@@ -51,13 +50,8 @@ function Hello() {
   };
   const fileChange = (id: string, value: string) => {
     //loop through file array to update to new value
-    const newFiles = files.map((file) => {
-      if (file.id === id) {
-        file.body = value;
-      }
-      return file;
-    });
-    setFiles(newFiles);
+    const newFile = { ...files[id], body: value };
+    setFiles({ ...files, [id]: newFile });
 
     //update the unsavedIDs
     if (!unsavedFileIDs.includes(id)) {
@@ -67,46 +61,40 @@ function Hello() {
 
   const deleteFile = (id: string) => {
     //  filter out the current file id
-    const newFiles = files.filter((file) => file.id != id);
-    setFiles(newFiles);
+    delete files[id];
+    setFiles(files);
     //close the tab if opened
     tabClose(id);
   };
 
   const updateFileName = (id: string, title: string) => {
     //loop through files, and update the title
-    const newFiles = files.map((file) => {
-      if (file.id === id) {
-        file.title = title;
-        file.isNew = false;
-      }
-      return file;
-    });
-    setFiles(newFiles);
+    const modifiedFile = { ...files[id], title, isNew: false };
+    setFiles({ ...files, [id]: modifiedFile });
   };
 
   const fileSearch = (keyword: string) => {
     //filter out the new files based on the keyword
-    const newFiles = files.filter((file) => file.title.includes(keyword));
+    const newFiles = filesArr.filter((file) => file.title.includes(keyword));
     setSearchedFiles(newFiles);
   };
 
   const createNewFile = () => {
     const newID = uuidv4();
-    const newFiles = [
-      ...files,
-      {
-        id: newID,
-        title: '',
-        body: '## Please type in Markdown',
-        createdAt: new Date().getTime(),
-        isNew: true,
-      },
-    ];
-    setFiles(newFiles);
+    const newFile = {
+      id: newID,
+      title: '',
+      body: '## Please type in Markdown',
+      createdAt: new Date().getTime(),
+      isNew: true,
+    };
+    setFiles({ ...files, [newID]: newFile });
   };
 
-  const activeFile = files.find((file) => file.id === activeFileID);
+  const activeFile = files[activeFileID];
+  const openedFiles = openedFileIDs
+    .map((openID) => files[openID])
+    .filter((file) => file !== undefined) as IFile[];
 
   return (
     <div className="Hello container-fluid px-0">
@@ -114,7 +102,7 @@ function Hello() {
         <div className="col-3  left-panel">
           <FileSearch title={'My Cloud Files'} onFileSearch={fileSearch} />
           <FileList
-            files={searchedFiles.length > 0 ? searchedFiles : files}
+            files={searchedFiles.length > 0 ? searchedFiles : filesArr}
             onFileClick={fileClick}
             onFileDelete={deleteFile}
             onSaveEdit={updateFileName}
