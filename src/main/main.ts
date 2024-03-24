@@ -24,7 +24,8 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-
+const remoteMain = require('@electron/remote/main');
+remoteMain.initialize();
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
@@ -84,7 +85,7 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
-
+  remoteMain.enable(mainWindow.webContents);
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
