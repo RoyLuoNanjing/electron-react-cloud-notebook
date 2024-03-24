@@ -24,8 +24,13 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+
 const remoteMain = require('@electron/remote/main');
 remoteMain.initialize();
+
+const ElectronStore = require('electron-store');
+ElectronStore.initRenderer();
+
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
