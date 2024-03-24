@@ -3,7 +3,11 @@ import { FileSearch } from '../components/FileSearch';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FileList, IFile } from '../components/FileList';
-import { faPlus, faFileImport } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPlus,
+  faFileImport,
+  faSave,
+} from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
 import { flattenArr, objToArr } from '../utils/helper';
 import SimpleMde from 'react-simplemde-editor';
@@ -12,9 +16,11 @@ import defaultFiles from '../utils/defaultFiles';
 import { BottomBtn } from '../components/BottomBtn';
 import { TabList } from '../components/TabList';
 import { useState } from 'react';
+import fileHelper from '../utils/fileHelper';
 
-const fs = window.require('fs');
-
+// require node.js modules
+const { join } = window.require('path');
+const remote = window.require('@electron/remote');
 function Hello() {
   const [files, setFiles] = useState(flattenArr(defaultFiles));
   const [activeFileID, setActiveFileID] = useState('');
@@ -22,6 +28,11 @@ function Hello() {
   const [unsavedFileIDs, setUnsavedFileIDs] = useState<string[]>([]);
   const [searchedFiles, setSearchedFiles] = useState<IFile[]>([]);
   const filesArr = objToArr(files);
+  const savedLocation = remote.app.getPath('documents');
+  const activeFile = files[activeFileID];
+  const openedFiles = openedFileIDs
+    .map((openID) => files[openID])
+    .filter((file) => file !== undefined) as IFile[];
 
   const fileClick = (fileID: string) => {
     //set current active file
@@ -61,6 +72,12 @@ function Hello() {
   };
 
   const deleteFile = (id: string) => {
+    fileHelper
+      .deleteFile(join(savedLocation, `${files[id].title}.md`))
+      .then(() => {
+        const { [id]: value, ...newFiles } = files;
+        setFiles(newFiles);
+      });
     //  filter out the current file id
     delete files[id];
     setFiles(files);
@@ -68,10 +85,25 @@ function Hello() {
     tabClose(id);
   };
 
-  const updateFileName = (id: string, title: string) => {
+  const updateFileName = (id: string, title: string, isNew: boolean) => {
     //loop through files, and update the title
     const modifiedFile = { ...files[id], title, isNew: false };
-    setFiles({ ...files, [id]: modifiedFile });
+    if (isNew) {
+      fileHelper
+        .writeFile(join(savedLocation, `${title}.md`), files[id].body)
+        .then(() => {
+          setFiles({ ...files, [id]: modifiedFile });
+        });
+    } else {
+      fileHelper
+        .renameFile(
+          join(savedLocation, `${files[id].title}.md`),
+          join(savedLocation, `${title}.md`),
+        )
+        .then(() => {
+          setFiles({ ...files, [id]: modifiedFile });
+        });
+    }
   };
 
   const fileSearch = (keyword: string) => {
@@ -92,10 +124,13 @@ function Hello() {
     setFiles({ ...files, [newID]: newFile });
   };
 
-  const activeFile = files[activeFileID];
-  const openedFiles = openedFileIDs
-    .map((openID) => files[openID])
-    .filter((file) => file !== undefined) as IFile[];
+  const saveCurrentFile = () => {
+    fileHelper
+      .writeFile(join(savedLocation, `${activeFile.title}.md`), activeFile.body)
+      .then(() => {
+        setUnsavedFileIDs(unsavedFileIDs.filter((id) => id !== activeFile.id));
+      });
+  };
 
   return (
     <div className="Hello container-fluid px-0">
@@ -146,6 +181,13 @@ function Hello() {
                 value={activeFile && activeFile.body}
                 onChange={(value) => fileChange(activeFile.id, value)}
                 options={{ minHeight: '515px', autofocus: true }}
+              />
+
+              <BottomBtn
+                text="Save"
+                colorClass="btn-success"
+                icon={faSave}
+                onBtnClick={saveCurrentFile}
               />
             </>
           )}
