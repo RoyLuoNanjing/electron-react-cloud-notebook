@@ -9,12 +9,12 @@ export interface IFile {
   title: string;
   body: string;
   createdAt: number;
-  isNew?: boolean;
+  isNew: boolean;
 }
 interface IProps {
   files: IFile[];
   onFileClick: (id: string) => void;
-  onSaveEdit: (id: string, value: string) => void;
+  onSaveEdit: (id: string, value: string, isNew: boolean) => void;
   onFileDelete: (id: string) => void;
 }
 export const FileList = (props: IProps) => {
@@ -46,7 +46,7 @@ export const FileList = (props: IProps) => {
   useEffect(() => {
     const editItem = files.find((file) => file.id === editStatus);
     if (enterPressed && editStatus != null && value.trim() != '') {
-      onSaveEdit(editItem!.id, value);
+      onSaveEdit(editItem!.id, value, editItem!.isNew);
       setEditStatus(null);
       setValue('');
     }
