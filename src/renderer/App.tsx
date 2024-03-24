@@ -13,9 +13,10 @@ import { BottomBtn } from '../components/BottomBtn';
 import { TabList } from '../components/TabList';
 import { useState } from 'react';
 
+const fs = window.require('fs');
+
 function Hello() {
   const [files, setFiles] = useState(flattenArr(defaultFiles));
-  console.log(files);
   const [activeFileID, setActiveFileID] = useState('');
   const [openedFileIDs, setOpenFileIDs] = useState<string[]>([]);
   const [unsavedFileIDs, setUnsavedFileIDs] = useState<string[]>([]);
