@@ -9,7 +9,7 @@ import {
   faSave,
 } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
-import { objToArr } from '../utils/helper';
+import { flattenArr, objToArr } from '../utils/helper';
 import SimpleMde from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import { BottomBtn } from '../components/BottomBtn';
@@ -18,7 +18,7 @@ import { useState } from 'react';
 import fileHelper from '../utils/fileHelper';
 
 // require node.js modules
-const { join } = window.require('path');
+const { join, basename, extname, dirname } = window.require('path');
 const remote = window.require('@electron/remote');
 const Store = window.require('electron-store');
 
@@ -114,7 +114,11 @@ function Hello() {
   };
 
   const updateFileName = (id: string, title: string, isNew: boolean) => {
-    const newPath = join(savedLocation, `${title}.md`);
+    //newPath should be different based on isNew
+    //if isNew is false, path should be old dirname + new title
+    const newPath = isNew
+      ? join(savedLocation, `${title}.md`)
+      : join(dirname(files[id].path), `${title}.md`);
     //loop through files, and update the title
     const modifiedFile = { ...files[id], title, isNew: false, path: newPath };
 
@@ -126,7 +130,7 @@ function Hello() {
         saveFilesToStore(newFiles);
       });
     } else {
-      const oldPath = join(savedLocation, `${files[id].title}.md`);
+      const oldPath = files[id].path;
       fileHelper.renameFile(oldPath, newPath).then(() => {
         setFiles(newFiles);
         saveFilesToStore(newFiles);
@@ -153,11 +157,9 @@ function Hello() {
   };
 
   const saveCurrentFile = () => {
-    fileHelper
-      .writeFile(join(savedLocation, `${activeFile.title}.md`), activeFile.body)
-      .then(() => {
-        setUnsavedFileIDs(unsavedFileIDs.filter((id) => id !== activeFile.id));
-      });
+    fileHelper.writeFile(activeFile.path, activeFile.body).then(() => {
+      setUnsavedFileIDs(unsavedFileIDs.filter((id) => id !== activeFile.id));
+    });
   };
 
   const importFiles = () => {
@@ -167,7 +169,42 @@ function Hello() {
         properties: ['openFile', 'multiSelections'],
         filters: [{ name: 'Markdown files', extensions: ['md'] }],
       })
-      .then((result: any) => console.log(result.filePaths));
+      .then((result: any) => {
+        if (Array.isArray(result.filePaths)) {
+          const { filePaths: paths } = result;
+
+          //filter out the path we already have in electron store
+          const filteredPath = paths.filter((path: string) => {
+            const alreadyAdded = Object.values(files).find((file) => {
+              //@ts-ignore
+              return file.path === path;
+            });
+            return !alreadyAdded;
+          });
+
+          //extend the path array to an array contains files info
+          const importFilesArr = filteredPath.map((path: string) => {
+            return {
+              id: uuidv4(),
+              title: basename(path, extname(path)),
+              path,
+            };
+          });
+
+          // get the new files object in flattenArr
+          const newFiles = { ...files, ...flattenArr(importFilesArr) };
+          // setState and update electron store
+          setFiles(newFiles);
+          saveFilesToStore(newFiles);
+          if (importFilesArr.length > 0) {
+            remote.dialog.showMessageBox({
+              type: 'info',
+              title: `${importFilesArr.length} files are successfully imported `,
+              message: `${importFilesArr.length} files are successfully imported `,
+            });
+          }
+        }
+      });
   };
 
   return (
