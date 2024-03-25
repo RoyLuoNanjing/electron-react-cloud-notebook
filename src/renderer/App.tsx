@@ -98,14 +98,19 @@ function Hello() {
   };
 
   const deleteFile = (id: string) => {
-    fileHelper.deleteFile(join(files[id].path)).then(() => {
-      //  filter out the current file id
-      delete files[id];
-      setFiles(files);
-      saveFilesToStore(files);
-      //close the tab if opened
-      tabClose(id);
-    });
+    if (files[id].isNew) {
+      const { [id]: value, ...afterDelete } = files;
+      setFiles(afterDelete);
+    } else {
+      fileHelper.deleteFile(join(files[id].path)).then(() => {
+        //  filter out the current file id
+        const { [id]: value, ...afterDelete } = files;
+        setFiles(afterDelete);
+        saveFilesToStore(files);
+        //close the tab if opened
+        tabClose(id);
+      });
+    }
   };
 
   const updateFileName = (id: string, title: string, isNew: boolean) => {
