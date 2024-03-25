@@ -160,6 +160,16 @@ function Hello() {
       });
   };
 
+  const importFiles = () => {
+    remote.dialog
+      .showOpenDialog({
+        title: 'Choose a markdown files to import',
+        properties: ['openFile', 'multiSelections'],
+        filters: [{ name: 'Markdown files', extensions: ['md'] }],
+      })
+      .then((result: any) => console.log(result.filePaths));
+  };
+
   return (
     <div className="Hello container-fluid px-0">
       <div className="row g-0">
@@ -185,6 +195,7 @@ function Hello() {
                 text="Import"
                 colorClass="btn-success"
                 icon={faFileImport}
+                onBtnClick={importFiles}
               />
             </div>
           </div>
