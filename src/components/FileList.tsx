@@ -4,6 +4,10 @@ import { faEdit, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons';
 import useKeyPress from '../hooks/useKeyPress';
 
+//load nodejs modules
+const remote = window.require('@electron/remote');
+const { Menu, MenuItem } = remote;
+
 export interface IFile {
   id: string;
   title: string;
@@ -17,6 +21,7 @@ interface IProps {
   onSaveEdit: (id: string, value: string, isNew: boolean) => void;
   onFileDelete: (id: string) => void;
 }
+
 export const FileList = (props: IProps) => {
   const { files, onFileClick, onSaveEdit, onFileDelete } = props;
 
@@ -42,6 +47,46 @@ export const FileList = (props: IProps) => {
       onFileDelete(editItem.id);
     }
   };
+
+  useEffect(() => {
+    const menu = new Menu();
+    menu.append(
+      new MenuItem({
+        label: 'open',
+        click: () => {
+          console.log('clicking');
+        },
+      }),
+    );
+    menu.append(
+      new MenuItem({
+        label: 'rename',
+        click: () => {
+          console.log('renaming');
+        },
+      }),
+    );
+
+    menu.append(
+      new MenuItem({
+        label: 'delete',
+        click: () => {
+          console.log('deleting');
+        },
+      }),
+    );
+
+    const handleContextMenu = (e: Event) => {
+      e.preventDefault();
+      menu.popup({
+        window: remote.getCurrentWindow(),
+      });
+    };
+    window.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      window.removeEventListener('contextmenu', handleContextMenu);
+    };
+  });
 
   useEffect(() => {
     const editItem = files.find((file) => file.id === editStatus);
