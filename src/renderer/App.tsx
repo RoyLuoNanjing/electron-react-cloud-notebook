@@ -14,11 +14,13 @@ import SimpleMde from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import { BottomBtn } from '../components/BottomBtn';
 import { TabList } from '../components/TabList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import fileHelper from '../utils/fileHelper';
 
 // require node.js modules
 const { join, basename, extname, dirname } = window.require('path');
+
+const { ipcRenderer } = window.require('electron');
 const remote = window.require('@electron/remote');
 const Store = window.require('electron-store');
 
@@ -206,6 +208,16 @@ function Hello() {
         }
       });
   };
+
+  useEffect(() => {
+    const callback = () => {
+      console.log('hello from menu');
+    };
+    ipcRenderer.on('create-new-file', callback);
+    return () => {
+      ipcRenderer.removeListener('create-new-file', callback);
+    };
+  });
 
   return (
     <div className="Hello container-fluid px-0">
