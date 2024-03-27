@@ -12,6 +12,7 @@ const { Menu, MenuItem } = remote;
 export const useContextMenu = (
   itemArr: IMenuItem[],
   targetSelector: string,
+  deps: any,
 ) => {
   let clickedElement = useRef(null);
 
@@ -37,7 +38,7 @@ export const useContextMenu = (
     return () => {
       window.removeEventListener('contextmenu', handleContextMenu);
     };
-  }, []);
+  }, deps);
 
   return clickedElement;
 };
