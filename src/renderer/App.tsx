@@ -259,12 +259,22 @@ function Hello() {
                 options={{ minHeight: '515px', autofocus: true }}
               />
 
-              <BottomBtn
-                text="Save"
-                colorClass="btn-success"
-                icon={faSave}
-                onBtnClick={saveCurrentFile}
-              />
+              <div
+                style={{
+                  //width: '200px',
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <span style={{ width: '100px' }}>
+                  <BottomBtn
+                    text="Save"
+                    colorClass="btn-info"
+                    icon={faSave}
+                    onBtnClick={saveCurrentFile}
+                  />{' '}
+                </span>
+              </div>
             </>
           )}
         </div>
