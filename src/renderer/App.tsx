@@ -14,6 +14,7 @@ import SimpleMde from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
 import { BottomBtn } from '../components/BottomBtn';
 import { TabList } from '../components/TabList';
+import useIpcRenderer from '../hooks/useIpcRenderer';
 import { useEffect, useState } from 'react';
 import fileHelper from '../utils/fileHelper';
 
@@ -209,14 +210,10 @@ function Hello() {
       });
   };
 
-  useEffect(() => {
-    const callback = () => {
-      console.log('hello from menu');
-    };
-    ipcRenderer.on('create-new-file', callback);
-    return () => {
-      ipcRenderer.removeListener('create-new-file', callback);
-    };
+  useIpcRenderer({
+    'create-new-file': createNewFile,
+    'import-file': importFiles,
+    'save-edit-file': saveCurrentFile,
   });
 
   return (
