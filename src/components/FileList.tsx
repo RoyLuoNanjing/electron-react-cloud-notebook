@@ -4,6 +4,7 @@ import { faEdit, faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons';
 import useKeyPress from '../hooks/useKeyPress';
 import { useContextMenu } from '../hooks/useContextMenu';
+import { getParentNode } from '../utils/helper';
 
 //load nodejs modules
 const remote = window.require('@electron/remote');
@@ -54,23 +55,33 @@ export const FileList = (props: IProps) => {
       {
         label: 'open',
         click: () => {
-          console.log('clicking', clickItem.current);
+          const parentElement = getParentNode(clickItem.current, 'file-item');
+          if (parentElement) {
+            onFileClick(parentElement.dataset.id);
+          }
         },
       },
       {
         label: 'rename',
         click: () => {
-          console.log('renaming');
+          const parentElement = getParentNode(clickItem.current, 'file-item');
+          if (parentElement) {
+            setEditStatus(parentElement.dataset.id);
+          }
         },
       },
       {
         label: 'delete',
         click: () => {
-          console.log('deleting');
+          const parentElement = getParentNode(clickItem.current, 'file-item');
+          if (parentElement) {
+            onFileDelete(parentElement.dataset.id);
+          }
         },
       },
     ],
     '.file-list',
+    [files],
   );
 
   useEffect(() => {
@@ -100,6 +111,8 @@ export const FileList = (props: IProps) => {
         <li
           key={file.id}
           className="list-group-item bg-light d-flex  align-items-center file-item"
+          data-id={file.id}
+          data-title={file.title}
         >
           {file.id != editStatus && !file.isNew && (
             <>
@@ -114,25 +127,6 @@ export const FileList = (props: IProps) => {
               >
                 {file.title}
               </span>
-              <button
-                type="button"
-                className="icon-button col-1"
-                onClick={() => {
-                  setEditStatus(file.id);
-                  setValue(file.title);
-                }}
-              >
-                <FontAwesomeIcon size={'1x'} title="Edit" icon={faEdit} />
-              </button>
-              <button
-                type="button"
-                className="icon-button col-1"
-                onClick={() => {
-                  onFileDelete(file.id);
-                }}
-              >
-                <FontAwesomeIcon size={'1x'} title="Delete" icon={faTrash} />
-              </button>
             </>
           )}
 
