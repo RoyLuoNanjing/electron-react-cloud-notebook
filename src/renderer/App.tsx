@@ -267,23 +267,6 @@ function Hello() {
                 onChange={(value) => fileChange(activeFile.id, value)}
                 options={{ minHeight: '515px', autofocus: true }}
               />
-
-              <div
-                style={{
-                  //width: '200px',
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                <span style={{ width: '100px' }}>
-                  <BottomBtn
-                    text="Save"
-                    colorClass="btn-info"
-                    icon={faSave}
-                    onBtnClick={saveCurrentFile}
-                  />{' '}
-                </span>
-              </div>
             </>
           )}
         </div>
