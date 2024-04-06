@@ -21,4 +21,28 @@ Most importantly, it functions like a web product, but you can also download and
 ### Main Page
 ![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/mainPage.png)
 
-### Planning to expand it with more features if anyone is interested
+### Import
+By clicking the import button, you can import any MD type files into the program
+![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/upload.png)
+
+### Create an markdown file
+From the sidebar, you can select or create new file
+By clicking the import button, you can import any MD type files into the program
+![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/sideBar.png)
+
+### Window Menu
+Like most software, you can add ant function into the menu
+![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/menu.png)
+
+### Markdown editor
+"I introduced SimpleMDE to provide the editor's functionality and wrote the logic for the tabs, where users will be informed if the file is not saved.
+![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/menu.png)
+
+### Keyboard Control
+Have you noticed how clean this interface is? There are no redundant buttons cluttering the user interactions. This is because all actions, such as delete, save, confirm, and quit, are controlled by keyboard commands. Just like in a Word document, you can quickly save your file by using 'Ctrl+S'.
+![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/actions.png)
+
+### Search
+Of course, you can search for specific files using keywords.
+![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/search.png)
+
