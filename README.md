@@ -35,7 +35,7 @@ Like most software, you can add ant function into the menu
 ![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/menu.png)
 
 ### Markdown editor
-"I introduced SimpleMDE to provide the editor's functionality and wrote the logic for the tabs, where users will be informed if the file is not saved.
+I introduced SimpleMDE to provide the editor's functionality and wrote the logic for the tabs, where users will be informed if the file is not saved.
 ![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/menu.png)
 
 ### Keyboard Control
