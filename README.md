@@ -19,6 +19,6 @@ It's a markdown notebook where you can create, edit, delete, import, and export 
 Most importantly, it functions like a web product, but you can also download and install this Electron program.
 
 ### Main Page
-![Main Page](https://[example.com/image.jpg(https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/mainPage.png))
+![Main Page](https://github.com/RoyLuoNanjing/electron-react-cloud-notebook/blob/main/assets/images/mainPage.png)
 
 ### Planning to expand it with more features if anyone is interested
